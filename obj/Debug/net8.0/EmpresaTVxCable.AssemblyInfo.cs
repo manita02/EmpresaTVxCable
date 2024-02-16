@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EmpresaTVxCable")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49d04e9be5acd16b8fb355665971719e0ec61dd6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0dbbecdcbcc6e352cb765216de325edbffd8c8d")]
 [assembly: System.Reflection.AssemblyProductAttribute("EmpresaTVxCable")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EmpresaTVxCable")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

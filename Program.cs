@@ -1,7 +1,15 @@
+using EmpresaTVxCable.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Database connection
+builder.Services.AddDbContext<BdTvXcableContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("stringBd")));
 
 var app = builder.Build();
 
