@@ -104,7 +104,7 @@ public partial class BdTvXcableContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("nombre");
             entity.Property(e => e.Precio)
-                .HasColumnType("decimal(10, 2)")
+                .HasColumnType("int")
                 .HasColumnName("precio");
         });
 
