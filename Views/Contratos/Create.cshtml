@@ -12,14 +12,48 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdServicio" class="control-label"></label>
-                <select asp-for="IdServicio" class ="form-control" asp-items="ViewBag.IdServicio"></select>
-            </div>
+            
             <div class="form-group">
                 <label asp-for="IdCliente" class="control-label"></label>
-                <select asp-for="IdCliente" class ="form-control" asp-items="ViewBag.IdCliente"></select>
+                <select asp-for="IdCliente" class ="form-control" asp-items="@((IEnumerable<SelectListItem>)ViewData["IdCliente"])"></select>
             </div>
+
+            <!--
+            <div class="form-group">
+                <label asp-for="IdServicio" class="control-label"></label>
+                <select asp-for="IdServicio" class ="form-control" asp-items="@((IEnumerable<SelectListItem>)ViewData["IdServicio"])"></select>
+            </div>
+            --> 
+
+
+            
+            <!-- Select -->
+<div class="form-group">
+    <label asp-for="IdServicio" class="control-label"></label>
+    <select id="selectIdServicio" class="form-control">
+                    @foreach (var item in (IEnumerable<SelectListItem>)ViewData["IdServicio"])
+                    {
+                <option value="@item.Value">@item.Text</option>
+                    }
+    </select>
+</div>
+
+<!-- Tabla -->
+<table id="tablaServicios" class="table">
+    <thead>
+        <tr>
+            <th>Id de Servicio</th>
+            <th>Nombre de Servicio</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Las filas se agregarán dinámicamente aquí -->
+    </tbody>
+</table>
+
+
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -33,4 +67,86 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @{
+        // Serializar los datos de servicio a JSON
+        var serviciosJson = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["IdServicio"]);
+    }
+
+    <!-- Script para almacenar los datos de servicio como JSON y manejar la tabla -->
+    <script>
+        // Obtener los datos de los servicios desde Razor
+        var servicios = @Html.Raw(serviciosJson);
+
+        // Mantener un registro de los IDs de servicios seleccionados
+        var serviciosSeleccionados = [];
+
+        // Captura el evento de cambio del select
+        document.getElementById("selectIdServicio").addEventListener("change", function() {
+            // Obtiene el valor seleccionado del select
+            var idServicioSeleccionado = document.getElementById("selectIdServicio").value;
+
+            // Verificar si el servicio seleccionado ya está en la tabla
+            if (serviciosSeleccionados.includes(idServicioSeleccionado)) {
+                alert("El servicio seleccionado ya está en la tabla.");
+                return; // Evitar agregar el servicio duplicado
+            }
+
+            // Agregar el ID del servicio seleccionado al registro de servicios seleccionados
+            serviciosSeleccionados.push(idServicioSeleccionado);
+
+            // Busca el servicio seleccionado en los datos de servicio
+            var servicioSeleccionado = servicios.find(function(servicio) {
+                return servicio.Value === idServicioSeleccionado;
+            });
+
+            // Agrega una nueva fila a la tabla con el id, nombre y precio del servicio seleccionado
+            var tabla = document.getElementById("tablaServicios");
+            var fila = tabla.insertRow(-1);
+            var celdaId = fila.insertCell(0);
+            celdaId.innerText = servicioSeleccionado.Value;
+            
+            
+                // Obtener el texto del servicio seleccionado
+    var textoServicio = servicioSeleccionado.Text;
+
+    // Dividir el texto en función del primer espacio en blanco
+    var partes = textoServicio.split(' - ');
+
+    // El primer elemento en "partes" será el nombre del servicio
+    var nombreServicio = partes[0];
+
+    // El segundo elemento en "partes" será el precio del servicio (eliminando el símbolo '$')
+    var precioServicio = partes[1].substring(1);
+            
+            
+            var celdaNombre = fila.insertCell(1);
+                celdaNombre.innerText = nombreServicio;
+
+
+
+
+
+            var celdaPrecio = fila.insertCell(2);
+                celdaPrecio.innerText = precioServicio;
+
+            // Agregar evento de doble clic para eliminar la fila
+            fila.addEventListener("dblclick", function() {
+                // Eliminar la fila de la tabla
+                tabla.deleteRow(fila.rowIndex);
+
+                // Eliminar el servicio correspondiente de la lista de servicios seleccionados
+                var index = serviciosSeleccionados.indexOf(idServicioSeleccionado);
+                if (index !== -1) {
+                    serviciosSeleccionados.splice(index, 1);
+                }
+            });
+        });
+    </script>
+
+    </script>
+
+            
+
+
 }

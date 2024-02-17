@@ -48,8 +48,26 @@ namespace EmpresaTVxCable.Controllers
         // GET: Contratoes/Create
         public IActionResult Create()
         {
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente");
-            ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "IdServicio");
+            var cliente = _context.Clientes.ToList();
+            var clientes = cliente.Select(c => new SelectListItem { Text = c.Nombre, Value = c.IdCliente.ToString() }).ToList();
+            ViewData["IdCliente"] = clientes;
+
+            var servicios = _context.Servicios.ToList().Select(s => new SelectListItem
+            {
+                Text = $"{s.Nombre} - ${s.Precio}", // Concatenamos el nombre y el precio del servicio
+                Value = s.IdServicio.ToString()
+            }).ToList();
+
+            foreach ( var servicio in servicios)
+            {
+                Console.WriteLine(servicio.Text);
+            }
+
+            ViewData["IdServicio"] = servicios;
+          
+
+            //ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente");
+            //ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "IdServicio");
             return View();
         }
 
